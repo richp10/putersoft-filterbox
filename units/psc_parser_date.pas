@@ -167,8 +167,8 @@ type
     Procedure RestoreSystemFormat;
 
     Function GetFormat(AKind:TPSCDateTimeKind):String;
-    Function ToString(Const V: TDateTime;AKind:TPSCDateTimeKind): String;overload;
-    Function ToString(Const V: TDateTime;const AFormat:String): String;overload;
+    Function ToString(Const V: TDateTime;AKind:TPSCDateTimeKind): String; overload;
+    Function ToString(Const V: TDateTime;const AFormat:String): String; overload;
     Function FromString(Const S: String;AKind:TPSCDateTimeKind;
       const ADefault:TDateTime): TDateTime;
 
@@ -681,7 +681,8 @@ Function TPSCDTFormatParser.Parse_a: Integer;
 var
   S:String;
 Begin
-  While GetChar in ['a','A','m','M','p','P','/'] Do
+  // While GetChar in ['a','A','m','M','p','P','/'] Do
+  While CharInSet(GetChar, ['a','A','m','M','p','P','/']) Do
     Next;
 
   S:=TokenString;
@@ -882,7 +883,8 @@ Const
    'h', 'H', 'n', 'N', 's', 'S', 'z', 'Z', 't', 'T', 'a', 'A', '''', '/', ':'];
 Begin
   If ParserState = psdt_Normal Then
-    While (GetChar <> #0) And Not (GetChar In MyValidCharSet) Do
+    //While (GetChar <> #0) And Not (GetChar In MyValidCharSet) Do
+    While (GetChar <> #0) And Not CharInSet(GetChar, MyValidCharSet) Do
       Next;
   If ParserState = psdt_Comment Then
     While (GetChar <> #0) And (GetChar <> '''') Do
@@ -929,7 +931,8 @@ Var
   MyCount : integer;
 Begin
   MyCount := -1;
-  While (GetChar in ACharSet) Do
+  // While (GetChar in ACharSet) Do
+  While CharInSet(GetChar, ACharSet) Do
   Begin
     Next;
     inc(MyCount);
@@ -985,11 +988,14 @@ begin
     result := GetDateAltFormatted(ADate, 'gg');
     case MySysLocale.PriLangID of
       LANG_JAPANESE:
-        Result := Copy(Result, 1, CharToBytelen(Result, 1));
+        //Result := Copy(Result, 1, CharToBytelen(Result, 1));
+        Result := Copy(Result, 1, CharToElementLen(Result, 1));
       LANG_CHINESE:
         if (MySysLocale.SubLangID = SUBLANG_CHINESE_TRADITIONAL)
-         and (ByteToCharLen(Result, Length(Result)) = 4) then
-            Result := Copy(Result, 1, CharToBytelen(Result, 2));
+         //and (ByteToCharLen(Result, Length(Result)) = 4) then
+         and (ElementToCharLen(Result, Length(Result)) = 4) then
+            //Result := Copy(Result, 1, CharToBytelen(Result, 2));
+            Result := Copy(Result, 1, CharToElementLen(Result, 2));
     end;
   end;
 end;

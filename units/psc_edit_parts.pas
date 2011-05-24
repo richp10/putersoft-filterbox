@@ -22,6 +22,9 @@ unit psc_edit_parts;
 
 interface
 {$I psc_defines.inc}
+{$IFDEF D2009}
+  {$M+}
+{$ENDIF}
 
 Uses
   Windows,

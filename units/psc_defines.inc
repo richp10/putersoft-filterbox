@@ -27,8 +27,27 @@
   {$DEFINE D7}
 {$ENDIF}
 
+{$IFDEF VER210} //Rad Studio 2010
+  {$DEFINE D7}
+  {$DEFINE D2009}
+  {$DEFINE D2010}
+{$ENDIF}
+
+{$IFDEF VER220} //Rad Studio XE
+  {$DEFINE D7}
+  {$DEFINE D2009}
+  {$DEFINE D2010}
+  {$DEFINE XE}
+{$ENDIF}
+
 {$IFDEF D7}
   {$DEFINE D6}
+{$ENDIF}
+
+{$IFDEF D2009}
+   {$POINTERMATH ON}
+   //{$M+}
+   //{$TYPEINFO ON}
 {$ENDIF}
 
 {$IFDEF D7}

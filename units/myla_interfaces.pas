@@ -102,7 +102,7 @@ type
     function GetAsDateTime : TDateTime;
     function GetAsDouble : Double;
     function GetAsInteger : Integer;
-    function GetAsString : AnsiString;
+    function GetAsString : String;  //AnsiString;
     function GetFieldType : TPSCFieldType;
     function GetAsWideString: WideString;
 
@@ -113,7 +113,7 @@ type
     procedure SetAsDouble(const Value : Double);
     procedure SetAsCurrency(const Value : Currency);
     procedure SetAsInteger (Value : Integer);
-    procedure SetAsString(const Value : AnsiString);
+    procedure SetAsString(const Value : String {AnsiString});
     procedure SetAsWideString(const Value : WideString);
 
     function IsNull:Boolean;
@@ -137,7 +137,7 @@ type
     property AsDateTime : TDateTime     Read GetAsDateTime Write SetAsDateTime;
     property AsDouble : Double          Read GetAsDouble Write SetAsDouble;
     property AsInteger : Integer        Read GetAsInteger Write SetAsInteger;
-    property AsString : AnsiString      Read GetAsString Write SetAsString;
+    property AsString : String {AnsiString} Read GetAsString Write SetAsString;
     property AsWideString: WideString   Read GetAsWideString Write SetAsWideString;
     property FieldType : TPSCFieldType  Read GetFieldType;
   end;
@@ -317,7 +317,7 @@ type
     property Objects[Index: Integer]: TObject read GetObject write PutObject;
     property Values[const Name: string]: string read GetValue write SetValue;
     property Strings[Index: Integer]: string read GetString write PutString;default;
-    property Text: string read GetTextStr write SetTextStr;
+    property Text: String read GetTextStr write SetTextStr;
   end;
 
   IPSCSaveToFile=interface(IPSCInterface)
@@ -1184,7 +1184,8 @@ type
     AsDateTime:TDateTime;
     AsDouble:Double;
     AsInteger:Integer;
-    AsString:AnsiString;
+    //AsString:AnsiString;
+    AsString:String;
     AsWideStr:WideString;
     HasValue:Boolean;
     DataType:TPSCFieldType;

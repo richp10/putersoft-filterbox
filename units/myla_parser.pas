@@ -24,6 +24,7 @@ interface
 {$I psc_defines.inc}
 
 uses
+  SysUtils,
   myla_system,
   myla_interfaces,
 
@@ -369,7 +370,8 @@ Function TPSCLikeMaskParser.LikeParseString: Integer;
 Begin
   Repeat
     Next;
-  Until (GetChar In [FEscapeChar,#0, '[', '%', '_']);
+  //Until (GetChar In [FEscapeChar,#0, '[', '%', '_']);
+  Until (CharInSet(GetChar,[FEscapeChar,#0, '[', '%', '_']));
   Result := tok_like_Str;
   ParserState := pslike_normal;
 End;
@@ -401,7 +403,8 @@ Begin
     Result := tok_like_CharSet;
   Repeat
     Next;
-  Until (GetChar In [#0, ']']);
+  //Until (GetChar In [#0, ']']);
+  Until (CharInSet(GetChar,[#0, ']']));
   If GetChar = ']' Then
     Next;
 End;
@@ -466,7 +469,7 @@ begin
 
   for i:=Low(AInStates) to High(AInStates) do
     for j:=0 to 255 do
-      if Char(j) in ACharSet then
+      if CharInSet(Char(j),ACharSet) then //if Char(j) in ACharSet then
         TPSCParserProcs(FParserProcs[AInStates[i]]).Procs[j]:=AProc;
 end;
 
@@ -474,7 +477,7 @@ end;
 
 function TPSCAbstractParser.SkipToCharOrEol(C:Char):boolean;
 begin
-  While (GetChar<>C) and (GetChar in cPSCValidChar) do
+  While (GetChar<>C) and (CharInSet(GetChar,cPSCValidChar)) do  //(GetChar in cPSCValidChar) do
     Next;
   Result:=GetChar=C;
 end;
@@ -499,11 +502,11 @@ function TPSCAbstractParser.ParseNumConst:Integer;
 
   function ParseScaleFactor:boolean;
   begin
-    Result:=GetChar in ['E','e'];
+    Result:=CharInSet(GetChar,['E','e']); //GetChar in ['E','e'];
     If Result then
     begin
       Next;
-      If GetChar in ['+','-'] then
+      If CharInSet(GetChar,['+','-']) then  //GetChar in ['+','-'] then
         Next;
       SkipDigits;
     end;
@@ -512,7 +515,7 @@ function TPSCAbstractParser.ParseNumConst:Integer;
 begin
   Next;
   SkipDigits;
-  if (GetChar='.') and (GetNextChar in cPSCDigit) then
+  if (GetChar='.') and CharInSet(GetNextChar,cPSCDigit) then  //(GetNextChar in cPSCDigit) then
   begin
     Next;
     SkipDigits;
@@ -529,7 +532,7 @@ end;
 
 procedure TPSCAbstractParser.SkipDigits;
 begin
-  while GetChar in cPSCDigit do
+  while CharInSet(GetChar,cPSCDigit) do   //GetChar in cPSCDigit do
     Next;
 end;
 
@@ -554,7 +557,7 @@ function TPSCAbstractParser.ParseIdentifierEx(Charset : TPSCCharSet):Integer;
 begin
   repeat
     Next;
-  until not (GetChar in Charset);
+  until not CharInSet(GetChar,Charset); //(GetChar in Charset);
 
   if Reswords.Find(TokenString,FResWordID) then
     Result:=tok_ResWord
@@ -566,7 +569,7 @@ end;
 
 function TPSCAbstractParser.RestIsComment:Integer;
 begin
-  While GetChar in cPSCValidChar do
+  While CharInSet(GetChar, cPSCValidChar) do   //GetChar in cPSCValidChar do
     Next;
   Result:=tok_Comment;
 end;

@@ -139,8 +139,7 @@ const
   SPSCFlt_FieldG = ':Field > :Value';
   SPSCFlt_FieldL = ':Field < :Value';
 
-  SPSCFlt_FieldDateE =
-    '((:Field >= :Value) and (:Field < :SYSVALUEPLUSONE))';
+  SPSCFlt_FieldDateE = '((:Field >= :Value) and (:Field < :SYSVALUEPLUSONE))';
 
   SPSCFlt_FieldToday = '((:Field >= :' + SPSCFltVar_Today + ') and (:Field < :'
     + SPSCFltVar_Tomorrow + '))';
@@ -186,6 +185,7 @@ const
   SPSCFlt_FieldIsNotNull_Proc     = 'PROC_FIELDISNOTNULL';
 
   SPSCFltSaveFileExt                         :String = '.flt';
+
   SPSCTemplCatAdditionalFilter               = 'AdditionalFilter';
   SPSCTemplCatUnknown                        = 'Unknown';
   SPSCTemplCatText                           = 'Text';
@@ -1351,6 +1351,8 @@ begin
     Result:=MyField.LookupFilterSource
   else
     Result:=nil;
+
+
 end;
 
 {------------------------------------------------------------------------------}
@@ -3347,10 +3349,12 @@ End;
 
 type
   TPSCSysParamData=class
+  public
     Proc:TPSCFltSysParamProc;
   end;
 
   TPSCTemplateProcData=class
+  public
     Proc:TPSCFltTemplateProc;
   end;
 

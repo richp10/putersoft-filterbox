@@ -31,9 +31,11 @@ Uses
 {$ENDIF}
 
   Classes,
+  Controls,
   DBCommon,
   DB,
-  sysutils,
+  Forms,
+  SysUtils,
 
   myla_system,
   myla_interfaces,
@@ -268,14 +270,26 @@ Type
   End;
 
 Const
-  FldTypeMap: TFieldMap = (
-    fldUNKNOWN,fldZSTRING,fldINT16,fldINT32,fldUINT16,fldBOOL,
-    fldFLOAT,fldFLOAT,fldBCD,fldDATE,fldTIME,fldDateTime,fldBYTES,
-    fldVARBYTES,fldINT32,fldBLOB,fldBLOB,fldBLOB,fldBLOB,fldBLOB,
-    fldBLOB,fldBLOB,fldCURSOR,fldZSTRING,fldZSTRING,fldINT64,fldADT,
-    fldArray,fldREF,fldTABLE,fldBLOB,fldBLOB,fldUNKNOWN,fldUNKNOWN,
-    fldUNKNOWN,fldZSTRING{$IFDEF D6},fldTimeStamp,fldBCD{$ENDIF});
-    
+  FldTypeMap: TFieldMap = (fldUNKNOWN,fldZSTRING,fldINT16,fldINT32,fldUINT16, // 0..4
+    fldBOOL,fldFLOAT,fldFLOAT,fldBCD,fldDATE,fldTIME,fldDateTime,   // 5..11
+    fldBYTES,fldVARBYTES,fldINT32,fldBLOB,fldBLOB,fldBLOB,fldBLOB,  // 12..18
+    fldBLOB,fldBLOB,fldBLOB,fldCURSOR,fldZSTRING,fldZSTRING,        // 19..24
+    fldINT64,fldADT,fldArray,fldREF,fldTABLE,fldBLOB,fldBLOB,       // 25..31
+    fldUNKNOWN,fldUNKNOWN,fldUNKNOWN,fldZSTRING{$IFDEF D6},fldTimeStamp,fldBCD{$ENDIF}  // 32..37
+    {$IFDEF D2010}, fldZSTRING, fldBLOB, fldTIMESTAMP, fldUNKNOWN, // 38..41
+    fldUINT32, fldINT16, fldBYTES, fldFLOAT, fldUNKNOWN, fldUNKNOWN, fldUNKNOWN, //42..48
+    fldUNKNOWN, fldBLOB, fldBYTES {$ENDIF} ); //49..51
+
+// RadStudio 2010 - Dichiarazione in module DB.pas
+//  TFieldType = (ftUnknown, ftString, ftSmallint, ftInteger, ftWord, // 0..4
+//    ftBoolean, ftFloat, ftCurrency, ftBCD, ftDate, ftTime, ftDateTime, // 5..11
+//    ftBytes, ftVarBytes, ftAutoInc, ftBlob, ftMemo, ftGraphic, ftFmtMemo, // 12..18
+//    ftParadoxOle, ftDBaseOle, ftTypedBinary, ftCursor, ftFixedChar, ftWideString, // 19..24
+//    ftLargeint, ftADT, ftArray, ftReference, ftDataSet, ftOraBlob, ftOraClob, // 25..31
+//    ftVariant, ftInterface, ftIDispatch, ftGuid, ftTimeStamp, ftFMTBcd, // 32..37
+//    ftFixedWideChar, ftWideMemo, ftOraTimeStamp, ftOraInterval, // 38..41
+//    ftLongWord, ftShortint, ftByte, ftExtended, ftConnection, ftParams, ftStream, //42..48
+//    ftTimeStampOffset, ftObject, ftSingle); //49..51
 {$Z-}
 
 Type
@@ -380,29 +394,43 @@ Type
 
   TPSCEmulDataSet = Class(TDataSet)
   protected
-    Function AllocRecordBuffer: PChar; override;
-    Procedure FreeRecordBuffer(Var Buffer: PChar); override;
-    Procedure GetBookmarkData(Buffer: PChar; Data: Pointer); override;
-    Function GetBookmarkFlag(Buffer: PChar): TBookmarkFlag; override;
-    Function GetRecord(Buffer: PChar; GetMode: TGetMode; DoCheck: Boolean):
-      TGetResult; override;
-    Function GetRecordSize: Word; override;
-    Procedure InternalAddRecord(Buffer: Pointer; Append: Boolean); override;
+    // Function AllocRecordBuffer: PChar; override;
+    function AllocRecordBuffer: TRecordBuffer; override;
+    // Procedure FreeRecordBuffer(Var Buffer: PChar); override;
+    procedure FreeRecordBuffer(var Buffer: TRecordBuffer); override;
+    // Procedure GetBookmarkData(Buffer: PChar; Data: Pointer); override;
+    procedure GetBookmarkData(Buffer: TRecordBuffer; Data: Pointer); override;
+    // Function GetBookmarkFlag(Buffer: PChar): TBookmarkFlag; override;
+    function GetBookmarkFlag(Buffer: TRecordBuffer): TBookmarkFlag; override;
+    //Function GetRecord(Buffer: PChar; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
+    function GetRecord(Buffer: TRecordBuffer; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
+    //Function GetRecordSize: Word; override;
+    function GetRecordSize: Word; override;
+    //Procedure InternalAddRecord(Buffer: Pointer; Append: Boolean); override;
+    procedure InternalAddRecord(Buffer: Pointer; Append: Boolean); override;
     Procedure InternalClose; override;
     Procedure InternalDelete; override;
     Procedure InternalFirst; override;
-    Procedure InternalGotoBookmark(Bookmark: Pointer); override;
+    //Procedure InternalGotoBookmark(Bookmark: Pointer); override;
+    procedure InternalGotoBookmark(Bookmark: Pointer); override;
     Procedure InternalHandleException; override;
     Procedure InternalInitFieldDefs; override;
-    Procedure InternalInitRecord(Buffer: PChar); override;
+    //Procedure InternalInitRecord(Buffer: PChar); override;
+    procedure InternalInitRecord(Buffer: TRecordBuffer); override;
     Procedure InternalLast; override;
     Procedure InternalOpen; override;
     Procedure InternalPost; override;
-    Procedure InternalSetToRecord(Buffer: PChar); override;
-    Function IsCursorOpen: Boolean; override;
-    Procedure SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag); override;
-    Procedure SetBookmarkData(Buffer: PChar; Data: Pointer); override;
-    Procedure SetFieldData(Field: TField; Buffer: Pointer); override;
+    //Procedure InternalSetToRecord(Buffer: PByte); override;   //(Buffer: PChar); override;
+    procedure InternalSetToRecord(Buffer: TRecordBuffer); override;
+    //Function IsCursorOpen: Boolean; override;
+    function IsCursorOpen: Boolean; override;
+    //Procedure SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag); override;
+    procedure SetBookmarkFlag(Buffer: TRecordBuffer; Value: TBookmarkFlag); override;
+    //Procedure SetBookmarkData(Buffer: PChar; Data: Pointer); override;
+    procedure SetBookmarkData(Buffer: TRecordBuffer; Data: Pointer); override;
+    //Procedure SetFieldData(Field: TField; Buffer: Pointer); override;
+    procedure SetFieldData(Field: TField; Buffer: Pointer); override;
+    //procedure SetFieldData(Field: TField; Buffer: Pointer; NativeFormat: Boolean); override;
   public
     Function AddField(Const AName: String; AFieldType: TFieldType): TField;
     Procedure AssignDataSet(Value: TDataSet);
@@ -411,7 +439,7 @@ Type
 {-------------------------------------------------------------------------}
 
 Function PSCFieldTypeToDBFieldType(AType: TPSCFieldType): TFieldType;
-Function PSCCreateFilterParserEx(DataSet: TDataSet; Const Expr: String;
+Function PSCCreateFilterParserEx(DataSet: TDataSet; Const Expr: WideString;
   ParserOptions: TParserOptions): TExprParser;
 
 {-------------------------------------------------------------------------}
@@ -615,7 +643,7 @@ end;
 
 {-------------------------------------------------------------------------}
 
-Function PSCCreateFilterParserEx(DataSet: TDataSet; Const Expr: String;
+Function PSCCreateFilterParserEx(DataSet: TDataSet; Const Expr: WideString;
   ParserOptions: TParserOptions): TExprParser;
 Begin
   Result:=nil;
@@ -851,7 +879,7 @@ Var
   Field: TField;
 Begin
   Result := Unassigned;
-  FieldName := PChar(FilterData + LiteralStart + ANode.iNameOffset);
+  FieldName := String(PAnsiChar{PChar}(FilterData + LiteralStart + ANode.iNameOffset));
   If Assigned(DataSet) And DataSet.Active Then
     Begin
       Field := DataSet.FieldByName(FieldName);
@@ -993,7 +1021,7 @@ End;
 Function PSCVariantToDateTime(Const Value: Variant): TDateTime;
 Begin
   Case varType(Value) Of
-    varOleStr,varStrArg,varString:
+    varOleStr,varStrArg,varString{$IFDEF D2009},varUString,vtWideString{$ENDIF}:
       Result := PSCStrToDateTime(Value);
   Else
     Result := Value;
@@ -1102,7 +1130,7 @@ Begin
   Result := Null;
   With ANode^ Do
     Begin
-      FuncName := PChar(FilterData + LiteralStart + ANode.iNameOffset);
+      FuncName := String(PAnsiChar{PChar}(FilterData + LiteralStart + ANode.iNameOffset));
       Params := ListOfValues(pCANListElem(GetNodeByOffset(NodeStart +
         iElemOffset)));
       Result := PSCRunFunction(PSCDecodeFuncName(FuncName),Params);
@@ -1199,14 +1227,18 @@ End;
 
 Function TPSCCustomExprEval.FindRecord(Search: TPSCSearchType): Boolean;
 Var
-  BMark: TBookMarkStr;
+  BMark: TBytes;  // TBookMarkStr;
+  SavedCursor: TCursor;
 Begin
   Result := False;
   If Not (Assigned(DataSet) And DataSet.Active) Then
     Exit;
 
+  SavedCursor := Screen.Cursor;
   DataSet.DisableControls;
   Try
+    Screen.Cursor := crHourGlass;
+
     BMark := DataSet.Bookmark;
     Case Search Of
       stFirst: DataSet.First;
@@ -1220,10 +1252,12 @@ Begin
   Except
     DataSet.BookMark := BMark;
     DataSet.EnableControls;
+    Screen.Cursor := SavedCursor;
     Raise;
     Exit;
   End;
   DataSet.EnableControls;
+  Screen.Cursor := SavedCursor;
 End;
 
 {-------------------------------------------------------------------------}
@@ -1319,7 +1353,7 @@ Begin
       Case iType Of
         fldZSTRING:
           Begin
-            S := PChar(Offs);
+            S := String(PAnsiChar{PChar}(Offs));
             Result := S;
             FieldType := FT_STRING;
           End;
@@ -1466,8 +1500,10 @@ Begin
         Result := TBlobField.Create(Nil);
       ftGraphic:
         Result := TGraphicField.Create(Nil);
+      {$IFNDEF D2009}
       ftWideString:
         Result := TStringField.Create(Nil);
+      {$ENDIF}
       ftLargeInt:
         Result := TIntegerField.Create(Nil);  // not TLargeInt field because it is not sup by ExprParser
       ftADT:
@@ -1494,6 +1530,45 @@ Begin
       {$IFDEF D6}
       ftTimeStamp:
         Result := TSQLTimeStampField.Create(Nil);
+      {$ENDIF}
+
+      {$IFDEF D2009}
+      ftFixedWideChar:
+        Begin
+          Result := TField.Create(Nil);
+          Result.SetFieldType(AFieldType);
+        End;
+    	ftWideMemo:
+        Result := TWideMemoField.Create(Nil);
+      ftWideString:
+        Result := TWideStringField.Create(Nil);
+    	ftOraTimeStamp,
+    	ftOraInterval:
+        Begin
+          Result := TField.Create(Nil);
+          Result.SetFieldType(AFieldType);
+        End;
+    	ftLongWord:
+        Result := TLongWordField.Create(Nil);
+    	ftShortint:
+        Result := TShortintField.Create(Nil);
+    	ftByte:
+        Result := TByteField.Create(Nil);
+    	ftExtended:
+        Result := TExtendedField.Create(Nil);
+    	ftConnection,
+    	ftParams,
+    	ftStream:
+        Begin
+          Result := TField.Create(Nil);
+          Result.SetFieldType(AFieldType);
+        End;
+    	ftTimeStampOffset:
+        Result := TSQLTimeStampOffsetField.Create(Nil);
+    	ftObject:
+        Result := TObjectField.Create(Nil);
+    	ftSingle:
+        Result := TSingleField.Create(Nil);
       {$ENDIF}
     Else
       Begin
@@ -1529,33 +1604,33 @@ End;
 
 {-------------------------------------------------------------------------}
 
-Function TPSCEmulDataSet.AllocRecordBuffer: PChar;
+Function TPSCEmulDataSet.AllocRecordBuffer: TRecordBuffer;  //PChar;
 Begin
   Result := Nil;
 End;
 
 {-------------------------------------------------------------------------}
 
-Procedure TPSCEmulDataSet.FreeRecordBuffer(Var Buffer: PChar);
+Procedure TPSCEmulDataSet.FreeRecordBuffer(Var Buffer: TRecordBuffer);  //PChar);
 Begin
 End;
 
 {-------------------------------------------------------------------------}
 
-Procedure TPSCEmulDataSet.GetBookmarkData(Buffer: PChar; Data: Pointer);
+Procedure TPSCEmulDataSet.GetBookmarkData(Buffer: TRecordBuffer {PChar}; Data: Pointer);
 Begin
 End;
 
 {-------------------------------------------------------------------------}
 
-Function TPSCEmulDataSet.GetBookmarkFlag(Buffer: PChar): TBookmarkFlag;
+Function TPSCEmulDataSet.GetBookmarkFlag(Buffer: TRecordBuffer {PChar}): TBookmarkFlag;
 Begin
   Result := bfCurrent;
 End;
 
 {-------------------------------------------------------------------------}
 
-Function TPSCEmulDataSet.GetRecord(Buffer: PChar; GetMode: TGetMode; DoCheck:
+Function TPSCEmulDataSet.GetRecord(Buffer: TRecordBuffer{PChar}; GetMode: TGetMode; DoCheck:
   Boolean): TGetResult;
 Begin
   Result := grError;
@@ -1612,7 +1687,7 @@ End;
 
 {-------------------------------------------------------------------------}
 
-Procedure TPSCEmulDataSet.InternalInitRecord(Buffer: PChar);
+Procedure TPSCEmulDataSet.InternalInitRecord(Buffer: TRecordBuffer);  //PChar);
 Begin
 End;
 
@@ -1636,7 +1711,7 @@ End;
 
 {-------------------------------------------------------------------------}
 
-Procedure TPSCEmulDataSet.InternalSetToRecord(Buffer: PChar);
+Procedure TPSCEmulDataSet.InternalSetToRecord(Buffer: TRecordBuffer); //PChar);
 Begin
 End;
 
@@ -1649,13 +1724,13 @@ End;
 
 {-------------------------------------------------------------------------}
 
-Procedure TPSCEmulDataSet.SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag);
+Procedure TPSCEmulDataSet.SetBookmarkFlag(Buffer: TRecordBuffer {PChar}; Value: TBookmarkFlag);
 Begin
 End;
 
 {-------------------------------------------------------------------------}
 
-Procedure TPSCEmulDataSet.SetBookmarkData(Buffer: PChar; Data: Pointer);
+Procedure TPSCEmulDataSet.SetBookmarkData(Buffer: TRecordBuffer {PChar}; Data: Pointer);
 Begin
 End;
 

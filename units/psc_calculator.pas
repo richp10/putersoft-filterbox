@@ -444,7 +444,8 @@ end;
 Procedure TPSCCustomCalcEdit.EditOnKeyPress(Sender: TObject; Var Key: Char);
 begin
   inherited;
-  If (Key>#31) and not (Key in ['0'..'9',DecimalSeparator]) then
+  //If (Key>#31) and not (Key in ['0'..'9',DecimalSeparator]) then
+  If (Key>#31) and not CharInSet(Key, ['0'..'9',DecimalSeparator]) then
     Key:=#0;
   If (Key=DecimalSeparator) and (Pos(DecimalSeparator,Text)>0) then
     Key:=#0;

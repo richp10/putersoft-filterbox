@@ -53,7 +53,7 @@ type
 
   TPSCDelphiSourceDirsOpt=(doAddLibFolder,doExcludeSysUnderD3);
   TPSCDelphiSourceDirsOpts=set of TPSCDelphiSourceDirsOpt;
-  TPSCDelphiVer = (dv_D2,dv_C1,dv_D3,dv_C3,dv_D4,dv_C4,dv_D5,dv_C5,dv_D6,dv_C6,dv_d7);
+  TPSCDelphiVer = (dv_D2,dv_C1,dv_D3,dv_C3,dv_D4,dv_C4,dv_D5,dv_C5,dv_D6,dv_C6,dv_d7,dv_D8,dv_D2005,dv_D2006,dv_C2006,dv_D2007,dv_C2007,dv_D2009,dv_C2009,dv_D2010,dv_C2010,dv_DXE,dv_CXE);
   TPSCDelphiVers=set of TPSCDelphiVer;
 
 const
@@ -69,7 +69,7 @@ const
   SPSCRTF_CompilerFileName = 'hcw.exe';
 
   CPSCAllDVersions     = [Low(TPSCDelphiVer)..High(TPSCDelphiVer)];
-  CPSCDelphiVersions   = [dv_D2,dv_D3,dv_D4,dv_D5,dv_D6,dv_d7];
+  CPSCDelphiVersions   = [dv_D2,dv_D3,dv_D4,dv_D5,dv_D6,dv_d7,dv_D8,dv_D2005,dv_D2006,dv_D2007,dv_D2009,dv_D2010,dv_DXE];
   CPSCBuilderVersions  = CPSCAllDVersions - CPSCDelphiVersions;
 
   cPSCAllDelphiVers:TPSCDelphiVers=[Low(TPSCDelphiVer)..High(TPSCDelphiVer)];
@@ -86,7 +86,19 @@ const
    'VER130',  //C5
    'VER140',  //D6
    'VER140',  //C6
-   'VER150'   //D7
+   'VER150',  //D7
+   'VER160',  //D8
+   'VER170',  //D2005
+   'VER180',  //D2006
+   'VER180',  //C2006
+   'VER185',  //D2007
+   'VER185',  //C2007
+   'VER200',  //D2009
+   'VER200',  //C2009
+   'VER210',  //D2010
+   'VER210',  //C2010
+   'VER220',  //DXE
+   'VER220'   //CXE
    );
  SPSCLongDelphiName:Array[TPSCDelphiVer] of String=(
    'Delphi 2',       //D2
@@ -99,11 +111,23 @@ const
    'C++ Builder 5',  //C5
    'Delphi 6',       //D6
    'C++ Builder 6',  //C6
-   'Delphi 7'        //D7
+   'Delphi 7',       //D7
+   'Delphi 8',       //D8
+   'Delphi 2005',     //D2005
+   'Delphi 2006',     //D2006
+   'C++ Builder 2006',//C2006
+   'Delphi 2007',     //D2007
+   'C++ Builder 2007',//C2007
+   'Delphi 2009',     //D2009
+   'C++ Builder 2009',//C2009
+   'Delphi 2010',     //D2010
+   'C++ Builder 2010',//C2010
+   'Delphi XE',       //DXE
+   'C++ Builder XE'   //CXE
    );
 
   CPSCDelphiVers : array[TPSCDelphiVer] of string =
-    ('D2', 'C1', 'D3', 'C3', 'D4', 'C4', 'D5','C5','D6','C6','D7'); //don't resource
+    ('D2', 'C1', 'D3', 'C3', 'D4', 'C4', 'D5','C5','D6','C6','D7','D8','D2005','D2006','C2006','D2007','C2007','D2009','C2009','D2010','C2010','DXE','CXE'); //don't resource
 
 {$IFNDEF D6}
   MinDateTime: TDateTime = -657434.0;      { 01/01/0100 12:00:00.000 AM }
@@ -948,7 +972,7 @@ function PSCCreateFontAdapter(AGetFont:TPSCGetFont):IPSCFont;
 function PSCCreateBrushAdapter(AGetBrush:TPSCGetBrush):IPSCBrush;
 function PSCCreatePenAdapter(AGetPen:TPSCGetPen):IPSCPen;
 
-Function PSCPerformLikeCompareEx(Const Value: AnsiString;
+Function PSCPerformLikeCompareEx(Const Value: String;
   const PreparedMask: IPSCObjectList):Boolean;
 Function PSCPerformLikeCompare(Const Value,Mask: String): Boolean;
 function PSCGetWindowsHandle(const AInterface:IPSCInterface):THandle;
@@ -1674,8 +1698,10 @@ end;
 
 const
   PackageSrcExts : array[TPSCDelphiVer] of string =
-   ('', '', SPSCDPKExt, SPSCBPKExt, SPSCDPKExt, SPSCBPKExt, SPSCDPKExt, SPSCBPKExt,SPSCDPKExt,SPSCBPKExt,SPSCDPKExt);
-//          dv_D3,          dv_C3,     dv_D4,      dv_C4,     dv_D5        dv_C5     dv_D6       dv_C6
+//          dv_D3,          dv_C3,     dv_D4,      dv_C4,     dv_D5        dv_C5     dv_D6       dv_C6      dv_d7
+   ('', '', SPSCDPKExt, SPSCBPKExt, SPSCDPKExt, SPSCBPKExt, SPSCDPKExt, SPSCBPKExt,SPSCDPKExt,SPSCBPKExt,SPSCDPKExt,
+//  dv_D8       dv_D2005    dv_D2006    dv_C2006    dv_D2007    dv_C2007    dv_D2009    dv_C2009    dv_D2010    dv_C2010    dv_DXE      dv_CXE);
+    SPSCDPKExt, SPSCDPKExt, SPSCDPKExt, SPSCBPKExt, SPSCDPKExt, SPSCBPKExt, SPSCDPKExt, SPSCBPKExt, SPSCDPKExt, SPSCBPKExt, SPSCDPKExt, SPSCBPKExt);
 
 function PSCGetPackageSrcExt(DelphiVer : TPSCDelphiVer) : string;
 begin
@@ -2000,8 +2026,11 @@ end;
 
 const
   PackageExts : array[TPSCDelphiVer] of string =
-   ('', '', SPSCDPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt,
-     SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt);
+   ('', '', SPSCDPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt,
+//  dv_D8       dv_D2005    dv_D2006    dv_C2006    dv_D2007    dv_C2007    dv_D2009    dv_C2009    dv_D2010    dv_C2010    dv_DXE      dv_CXE);
+    SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt, SPSCBPLExt);
+
+
 
 function PSCGetPackageExt(DelphiVer : TPSCDelphiVer) : string;
 begin
@@ -2294,7 +2323,7 @@ begin
   begin
     Result:='';
     for i:=1 to Length do
-      Result:=Result+PSCGetPasswordChar;
+      Result:=Result+Char(PSCGetPasswordChar);
     If not FGeneratedPasswords.Find(Result,Index) then
     begin
       FGeneratedPasswords.Add(Result);
@@ -2412,6 +2441,8 @@ begin
           ADataSet.Fields.Fields[MyFieldIndex].AsFloat:=Random(1000)/10.0;
         ftDate,ftTime,ftDateTime{$IFDEF D6},ftTimeStamp{$ENDIF}:
           ADataSet.Fields.Fields[MyFieldIndex].AsDateTime:=PSCRandomDateTime;
+
+        //TODO: Gestire i nuovi tipi di campi da RadStudio 2009 in poi...
       end;
     end;
     ADataSet.Post;
@@ -4536,7 +4567,7 @@ begin
       begin
         inc(i);
         a:=i;
-        While (not (SQL[a] in CStopChars)) and (a<=MyLen) do
+        While (not CharInSet(SQL[a], CStopChars)) and (a<=MyLen) do //not (SQL[a] in CStopChars)) and (a<=MyLen) do
           inc(a);
         If a<>i then
         begin
@@ -4849,7 +4880,7 @@ Begin
         Result := FT_DATETIME;
     varBoolean:
       Result := FT_BOOL;
-    varString,varOleStr,varStrArg:
+    varString,varOleStr,varStrArg{$IFDEF D2009},varUString,vtWideString{$ENDIF}:
       Result := FT_STRING;
   Else
     Result := FT_UNK;
@@ -6519,6 +6550,18 @@ Begin
       Result := FT_DATE;
     ftDateTime{$IFDEF D6},ftTimeStamp{$ENDIF}:
       Result := FT_DATETIME;
+    {$IFDEF D2009}
+    ftFixedWideChar,ftWideMemo:
+      Result := FT_STRING;
+    ftOraTimeStamp,ftTimeStampOffset:
+      Result := FT_DATETIME;
+    ftOraInterval:
+      Result := FT_TIME;
+    ftLongWord,ftShortint,ftByte:
+      Result := FT_INT;
+    ftExtended,ftSingle:
+      Result := FT_FLOAT;
+    {$ENDIF}
   Else
     Result := FT_UNK;
   End;
@@ -6579,14 +6622,16 @@ end;
 
 function TPSCExternalProcs.UpperCase(const S:String):String;
 begin
-  Result:=SysUtils.AnsiUpperCase(S);
+  // Result:=SysUtils.AnsiUpperCase(S);
+  Result:=SysUtils.UpperCase(S);
 end;
 
 {------------------------------------------------------------------}
 
 function TPSCExternalProcs.LowerCase(const S:String):String;
 begin
-  Result:=SysUtils.AnsiLowerCase(S);
+  //Result:=SysUtils.AnsiLowerCase(S);
+  Result:=SysUtils.LowerCase(S);
 end;
 
 {-------------------------------------------------------------------------}
@@ -7408,7 +7453,7 @@ end;
 
 {-------------------------------------------------------------------------}
 
-Function PSCPerformLikeCompareEx(Const Value: AnsiString;
+Function PSCPerformLikeCompareEx(Const Value: String;
   const PreparedMask: IPSCObjectList):Boolean;
 Var
   NewPos: Integer;
@@ -7505,8 +7550,8 @@ Begin
         tok_like_AnyChar: Inc(Pos);
         tok_like_CharSet:
           Begin
-            If Not (Value[Pos] In
-              TPSCPreparedMaskItem(PreparedMask[I]).CharSetData) Then
+            // If Not (Value[Pos] In TPSCPreparedMaskItem(PreparedMask[I]).CharSetData) Then
+            If Not CharInSet(Value[Pos],TPSCPreparedMaskItem(PreparedMask[I]).CharSetData) Then
               If CanMoveBackward Then
                 Pos := OldPos(I)
               Else
@@ -7515,8 +7560,8 @@ Begin
           End;
         tok_like_NotCharSet:
           Begin
-            If Value[Pos] In TPSCPreparedMaskItem(PreparedMask[I]).CharSetData
-              Then
+            // If Value[Pos] In TPSCPreparedMaskItem(PreparedMask[I]).CharSetData
+            If CharInSet(Value[Pos],TPSCPreparedMaskItem(PreparedMask[I]).CharSetData) Then
               If CanMoveBackward Then
                 Pos := OldPos(I)
               Else

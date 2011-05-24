@@ -24,7 +24,7 @@ interface
 {$I psc_defines.inc}
 
 uses
-  psc_const,
+  psc_const, SysUtils, AnsiStrings,
 
   myla_interfaces;
 
@@ -811,17 +811,17 @@ type
 
 function PSCGetArrayGrowDelta(ACapacity:Integer):Integer;
 function PSCCreateObjectList(AOwnerShip:TPSCItemOwnership=ioReferenced):IPSCObjectList;
-Function PSCParseLikeCharSetDef(Const S: AnsiString): TPSCCharSet;
+Function PSCParseLikeCharSetDef(Const inputS: String): TPSCCharSet;
 Function PSCTimeOf(Const ADateTime: TDateTime): TDateTime;
 Function PSCDateOf(Const ADateTime: TDateTime): TDateTime;
 Function PSCDatesCompare(Const A,B: TDateTime;AKind:TPSCDateTimeKind): Integer;
 function PSCSetStrCharsTo(const S:String;Index,Count:Integer;C:Char):String;
 Function PSCTrimSeparators(Const S: String; Separators: TPSCCharSet): String;
-Function PSCTrimSeparatorsRight(Const S: AnsiString; Separators: TPSCCharSet):
-  AnsiString;
-Function PSCTrimSeparatorsLeft(Const S: AnsiString; Separators: TPSCCharSet):
-  AnsiString;
-Function PSCTrim(Const S: AnsiString): AnsiString;
+Function PSCTrimSeparatorsRight(Const S: String; Separators: TPSCCharSet):
+  String;
+Function PSCTrimSeparatorsLeft(Const S: String; Separators: TPSCCharSet):
+  String;
+Function PSCTrim(Const S: String): String;
 function PSCTrimNonTextChars(const S:String):String;
 function PSCRemoveSpaces(const Str: string): string;
 function PSCStrArrayToStr(const StrArray:Array of String;
@@ -857,21 +857,20 @@ Function PSCRemoveSlash(Const Path: String): String;
 Function PSCStringOfSpace(Num: Integer): String;
 Function PSCBackPos(Const SubStr,S: String): Integer;
 Function PSCGetOpenDlgFilter(Const FileCat,FileExt: String): String;
-Function PSCRemoveCharSet(Const CharSet: TPSCCharSet; Const S: AnsiString):AnsiString;
+Function PSCRemoveCharSet(Const CharSet: TPSCCharSet; Const S: String):String;
 Function PSCRemoveSpChars(Const S: String): String;
 Function PSCRemoveColons(Const S: String): String;
-Function PSCAddCRLF(Const S: AnsiString): AnsiString;
+Function PSCAddCRLF(Const S: String {AnsiString}): String; //AnsiString;
 Function PSCTrimStringRight(Const S,PosStr: String): String;
 Function PSCTrimStringLeft(Const S,PosStr: String): String;
 Function PSCExtractValuePart(Const S: String): String;
 function PSCGetOpenDlgFilters(const Categories,Extensions:Array of String):String;
 Function PSCListsInterSect(const l1,l2: IPSCObjectList): boolean;
-Function PSCLeaveCharSet(Const CharSet: TPSCCharSet; Const S: AnsiString):
-  AnsiString;
+Function PSCLeaveCharSet(Const CharSet: TPSCCharSet; Const S: String):
+  String;
 Procedure PSCExtractPickListValues(Const PickListStr: String; Var
   DisplayValue,Value: String);
-Function PSCStrInCharSet(Const S: AnsiString; Const CharSet: TPSCCharSet):
-  boolean;
+Function PSCStrInCharSet(Const S: String {AnsiString}; Const CharSet: TPSCCharSet): boolean;
 Function PSCIncWeek(Const Date: TDateTime; NumberOfWeeks: Integer): TDateTime;
 Function PSCAddChar(Const AStr: String; AChar: Char): String;
 Function PSCMaxInArray(Const A: Array Of Integer): Integer;
@@ -995,7 +994,7 @@ Const
 
 Const
   cQuoteParamTypes: Set Of TPSCFieldType =
-  [FT_STRING,FT_DATE,FT_TIME,FT_DATETIME];
+  [FT_STRING,FT_DATE,FT_TIME,FT_DATETIME,FT_MEMO,FT_WIDESTR];
   cNoDispValueTypes: Set Of TPSCFieldType = [FT_UNK,
   FT_BOOL,FT_CURRENCY,FT_DATE,FT_TIME,FT_DATETIME];
 
@@ -1131,7 +1130,7 @@ procedure PSCInflateRect(var ARect: TPSCRect; X, Y: Integer);
 procedure PSCOffsetRect(var ARect: TPSCRect; X, Y: Integer);
 function PSCPtInRect(const Rect: TPSCRect; const P: TPSCPoint): Boolean;
 function PSCIsRectEmpty(const Rect: TPSCRect): Boolean;
-procedure PSCDelete(var S: Ansistring; Index, Count:Integer);
+procedure PSCDelete(var S: string; Index, Count:Integer);
 function PSCCombineDateTime(const ADate,ATime:TDateTime):TDateTime;
 function PSCCreateMemField(const AName:String;AType:TPSCFieldType;
   const ATypeConvert:IPSCTypeConvert=nil):IPSCDataField;
@@ -1452,7 +1451,8 @@ begin
     while P <= Length(AValue) do
     begin
       Start := P;
-      while not (AValue[P] in [Char(#0), Char(#10), Char(#13)]) do Inc(P);
+      // while not (AValue[P] in [Char(#0), Char(#10), Char(#13)]) do Inc(P);
+      while not CharInSet(AValue[P], [#0,#10,#13]) do Inc(P);
       S:=Copy(AValue,Start,P - Start);
       Add(S);
       if AValue[P] = #13 then Inc(P);
@@ -1848,7 +1848,8 @@ Begin
     Result := False
   Else
     Result := (Pos(' ',FieldName) > 0) Or (Pos('#',FieldName) > 0)
-      Or (FieldName[1] In [Char('0')..Char('9')])
+      // Or (FieldName[1] In [Char('0')..Char('9')])
+      Or CharInSet(FieldName[1], [AnsiChar('0')..AnsiChar('9')])
       Or PSCIsSQLKeyword(FieldName) Or Not
         PSCStrInCharSet(FieldName,cPSCAllowedFieldChars);
 End;
@@ -2649,7 +2650,7 @@ End;
 
 {-------------------------------------------}
 
-Function PSCStrInCharSet(Const S: AnsiString; Const CharSet: TPSCCharSet):
+Function PSCStrInCharSet(Const S: String {AnsiString}; Const CharSet: TPSCCharSet):
   boolean;
 Var
   i: Integer;
@@ -2658,7 +2659,8 @@ Begin
   If Length(S) = 0 Then
     exit;
   For i := 1 To Length(S) Do
-    If Not (S[i] In CharSet) Then
+    // If Not (S[i] in CharSet) Then
+    If Not CharInSet(S[i], CharSet) Then
       Begin
         Result := False;
         exit;
@@ -2751,13 +2753,14 @@ End;
 
 {-------------------------------------------}
 
-Function PSCAddCRLF(Const S: AnsiString): AnsiString;
+Function PSCAddCRLF(Const S: String {AnsiString}): String; //AnsiString;
 Var
   L: Integer;
 
   Function ValidChar(i: Integer): boolean;
   Begin
-    Result := S[i] In [#13,#10];
+    //Result := S[i] In [#13,#10];
+    Result := CharInSet(S[i],[#13,#10]);
   End;
 
 Begin
@@ -3167,34 +3170,34 @@ end;
 
 {------------------------------------------------------------}
 
-Function PSCTrim(Const S: AnsiString): AnsiString;
+Function PSCTrim(Const S: String): String;
 begin
   Result:=PSCTrimSeparators(S,[' ']);
 end;
 
 {------------------------------------------------------------}
 
-Function PSCTrimSeparatorsLeft(Const S: AnsiString; Separators: TPSCCharSet):
-  AnsiString;
+Function PSCTrimSeparatorsLeft(Const S: String; Separators: TPSCCharSet):
+  String;
 Var
   I,L: Integer;
 Begin
   L := Length(S);
   I := 1;
-  While (I <= L) And (S[I] In Separators) Do
+  While (I <= L) And CharInSet(S[I],Separators) Do
     Inc(I);
   Result := Copy(S,I,Maxint);
 End;
 
 {------------------------------------------------------------}
 
-Function PSCTrimSeparatorsRight(Const S: AnsiString; Separators: TPSCCharSet):
-  AnsiString;
+Function PSCTrimSeparatorsRight(Const S: String; Separators: TPSCCharSet):
+  String;
 Var
   I: Integer;
 Begin
   I := Length(S);
-  While (I > 0) And (S[I] In Separators) Do
+  While (I > 0) And CharInSet(S[I],Separators) Do
     Dec(I);
   Result := Copy(S,1,I);
 End;
@@ -3255,12 +3258,14 @@ End;
 
 {-------------------------------------------------------------}
 
-Function PSCParseLikeCharSetDef(Const S: AnsiString): TPSCCharSet;
+Function PSCParseLikeCharSetDef(Const inputS: String): TPSCCharSet;
 Var
   i: Integer;
   j: AnsiChar;
+  S: AnsiString;
 Begin
   Result := [];
+  S := AnsiString(inputS);
   i := 1;
   While I <= Length(S) Do
     Begin
@@ -3790,8 +3795,8 @@ begin
     Work(S)
   else
     begin
-      Work(PSCUpperCase(S));
-      Work(PSCLowerCase(S));
+      Work(AnsiStrings.AnsiUpperCase(S));  //Work(PSCUpperCase(S));
+      Work(AnsiStrings.AnsiLowerCase(S));  //Work(PSCLowerCase(S));
     end;
 end;
 
@@ -4006,7 +4011,7 @@ end;
 
 {------------------------------------------------------------------}
 
-procedure PSCDelete(var S: Ansistring; Index, Count:Integer);
+procedure PSCDelete(var S: string; Index, Count:Integer);
 var
   L:Integer;
 begin
@@ -4017,27 +4022,28 @@ end;
 
 {------------------------------------------------------------------}
 
-Function PSCLeaveCharSet(Const CharSet: TPSCCharSet; Const S: AnsiString):
-  AnsiString;
+Function PSCLeaveCharSet(Const CharSet: TPSCCharSet; Const S: String):
+  String;
 Var
   i: Integer;
 Begin
   Result := S;
   For i := Length(Result) Downto 1 Do
-    If Not (Result[i] In CharSet) Then
+    If Not CharInSet(Result[i],CharSet) Then
       PSCDelete(Result,i,1);
 End;
 
 {------------------------------------------------------------------}
 
-Function PSCRemoveCharSet(Const CharSet: TPSCCharSet; Const S: AnsiString):
-  AnsiString;
+Function PSCRemoveCharSet(Const CharSet: TPSCCharSet; Const S: String):
+  String;
 Var
   i: Integer;
 Begin
   Result := S;
   For I := Length(Result) Downto 1 Do
-    If Result[I] In CharSet Then
+//    If Result[I] In CharSet Then
+    If CharInSet(Result[I],CharSet) Then
       PSCDelete(Result,I,1);
 End;
 
@@ -4063,14 +4069,14 @@ type
     function GetAsDateTime : TDateTime;
     function GetAsDouble : Double;
     function GetAsInteger : Integer;
-    function GetAsString : Ansistring;
+    function GetAsString : String;  //Ansistring;
     function GetAsWideString: WideString;
 
     procedure SetAsBoolean(Value : boolean);
     procedure SetAsDateTime(const Value : TDateTime);
     procedure SetAsDouble(const Value : Double);
     procedure SetAsInteger(Value : Integer);
-    procedure SetAsString(const Value : Ansistring);
+    procedure SetAsString(const Value : String);  // Ansistring);
     procedure SetAsObject(Value:TObject);
     procedure SetAsInterface(const Value:IPSCInterface);
     procedure SetAsCurrency(const Value : Currency);
@@ -4106,14 +4112,14 @@ type
     function InternalGetAsDateTime : TDateTime;virtual;
     function InternalGetAsDouble : Double;virtual;
     function InternalGetAsInteger : Integer;virtual;
-    function InternalGetAsString : Ansistring;virtual;
+    function InternalGetAsString : String;virtual;  //Ansistring;virtual;
     function InternalGetAsWideString : Widestring;virtual;
 
     procedure InternalSetAsBoolean(Value : boolean);virtual;
     procedure InternalSetAsDateTime(const Value : TDateTime);virtual;
     procedure InternalSetAsDouble(const Value : Double);virtual;
     procedure InternalSetAsInteger(Value : Integer);virtual;
-    procedure InternalSetAsString(const Value : AnsiString);virtual;
+    procedure InternalSetAsString(const Value : String {AnsiString});virtual;
     procedure InternalSetAsWideString(const Value : WideString);virtual;
     procedure InternalSetAsObject(Value:TObject);virtual;
     procedure InternalSetAsInterface(const Value:IPSCInterface);virtual;
@@ -4135,7 +4141,7 @@ type
     function InternalGetAsDateTime : TDateTime;override;
     function InternalGetAsDouble : Double;override;
     function InternalGetAsInteger : Integer;override;
-    function InternalGetAsString : Ansistring;override;
+    function InternalGetAsString : String;override; //Ansistring;override;
     function InternalGetAsWideString : Widestring;override;
 
     function GetFieldType : TPSCFieldType;override;
@@ -4147,7 +4153,7 @@ type
     procedure InternalSetAsDouble(const Value : Double);override;
     procedure InternalSetAsCurrency(const Value : Currency);override;
     procedure InternalSetAsInteger (Value : Integer);override;
-    procedure InternalSetAsString(const Value : Ansistring);override;
+    procedure InternalSetAsString(const Value : String {Ansistring});override;
     procedure InternalSetAsWideString(const Value : WideString);override;
 
     function IsNull:Boolean;override;
@@ -4471,7 +4477,7 @@ end;
 
 {----------------------------------------}
 
-procedure TPSCCustomField.InternalSetAsString(const Value : AnsiString);
+procedure TPSCCustomField.InternalSetAsString(const Value : String {AnsiString});
 begin
 end;
 
@@ -4571,7 +4577,7 @@ end;
 
 {----------------------------------------}
 
-function TPSCCustomField.InternalGetAsString : Ansistring;
+function TPSCCustomField.InternalGetAsString : String; //Ansistring;
 begin
   Result:='';
 end;
@@ -4642,7 +4648,7 @@ end;
 
 {----------------------------------------}
 
-function TPSCCustomField.GetAsString : string;
+function TPSCCustomField.GetAsString : String;  // AnsiString;
 begin
   case GetFieldType of
     FT_INT:
@@ -4887,7 +4893,7 @@ end;
 
 {----------------------------------------}
 
-procedure TPSCCustomField.SetAsString(const Value : string);
+procedure TPSCCustomField.SetAsString(const Value : String {AnsiString});
 begin
   BeforeChange;
   case GetFieldType of
@@ -5014,7 +5020,7 @@ end;
 
 {----------------------------------------}
 
-function TPSCMemField.InternalGetAsString : Ansistring;
+function TPSCMemField.InternalGetAsString : String; //Ansistring;
 begin
   Result:=FData[FEditing].AsString;
 end;
@@ -5146,7 +5152,7 @@ end;
 
 {----------------------------------------}
 
-procedure TPSCMemField.InternalSetAsString(const Value : Ansistring);
+procedure TPSCMemField.InternalSetAsString(const Value : String {Ansistring});
 begin
   FData[FEditing].AsString:=Value;
   FData[FEditing].HasValue:=Value<>'';
@@ -5199,7 +5205,8 @@ var
 begin
   Result:=True;
   for i := 0 to S.Count - 1 do
-    S[i] := PSCUpperCase(S[i]);
+    // S[i] := PSCUpperCase(S[i]);
+    S[i] := SysUtils.AnsiUpperCase(S[i]);
 end;
 
 procedure PSCAnsiUpperCaseStrings(const S : IPSCStrings);

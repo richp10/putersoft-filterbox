@@ -33,6 +33,7 @@ Uses
   classes,
   db,
   extctrls,
+  SysUtils,
 
   myla_system,
   myla_interfaces,
@@ -571,6 +572,7 @@ implementation
 
 type
   TPSCThemeRegisterItem=class
+  public
     Proc:TPSCCreateThemeProc;
     UserData:Integer;
   end;
@@ -3255,7 +3257,8 @@ End;
 Procedure TPSCPopupForm.KeyPress(Var Key: Char);
 Begin
   Inherited;
-  If Key In [#13,#27] Then
+  //If Key In [#13,#27] Then
+  If CharInSet(Key,[#13,#27]) Then
     Key := #0;
 End;
 

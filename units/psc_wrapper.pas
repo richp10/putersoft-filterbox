@@ -302,8 +302,16 @@ Function PSCSubStr(Const S: String; Const Index: Integer;
 Function PSCFolderExists(Const Name: String): Boolean;
 function PSCAddBitmapFromResourceEx(ImageList: TPSCImageList;
   const ResName: string;Instance: THandle): Integer;
+function PSCInsertBitmapFromResourceEx(ImageList: TPSCImageList;
+  const ResName: string;Instance: THandle;const Index: Integer): Integer;
+function PSCReplaceBitmapFromResourceEx(ImageList: TPSCImageList;
+  const ResName: string;Instance: THandle;Index: Integer): Integer;
 function PSCAddBitmapFromResource(ImageList:TPSCImageList;
-  const ResName:String):Integer;
+  const ResName:String): Integer;
+function PSCInsertBitmapFromResource(ImageList:TPSCImageList;
+  const ResName:String; const Index: Integer): Integer;
+function PSCReplaceBitmapFromResource(ImageList:TPSCImageList;
+  const ResName:String; const Index: Integer): Integer;
 procedure PSCLoadBitmapFromResource(ABitmap:TPSCBitmap;const AResName:String);
 Function PSCChangeCharTo(FromChar,ToChar: Char; Const S: String): String;
 Procedure PSCItemHtDrawEx(Canvas: TPSCCanvas; ARect: TRect; Const Text: String;
@@ -642,7 +650,73 @@ begin
   Bitmap := TPSCBitmap.Create;
   try
     Bitmap.LoadFromResourceName(Instance, ResName);
-    Result := ImageList.AddMasked(Bitmap, BitMap.TransparentColor);
+    Result := ImageList.AddMasked(Bitmap, BitMap.TransparentColor)
+  finally
+    Bitmap.Free;
+  end;
+end;
+
+{------------------------------------------------------------}
+
+function PSCInsertBitmapFromResource(ImageList:TPSCImageList;
+  const ResName:String; const Index: Integer): Integer;
+Var
+  H:THandle;
+begin
+  H:=PSCFindResourceInstance(ResName,RT_BITMAP);
+
+  If H=0 then
+    Result :=-1
+  else
+    Result := PSCInsertBitmapFromResourceEx(ImageList,ResName,H,Index);
+end;
+
+{------------------------------------------------------------------}
+
+function PSCInsertBitmapFromResourceEx(ImageList: TPSCImageList;
+  const ResName: string;Instance: THandle;const Index: Integer) : Integer;
+var
+  Bitmap: TPSCBitmap;
+begin
+  Result := -1;  
+  Bitmap := TPSCBitmap.Create;
+  try
+    Bitmap.LoadFromResourceName(Instance, ResName);
+    ImageList.InsertMasked(Index, Bitmap, BitMap.TransparentColor);
+    Result := Index+1;
+  finally
+    Bitmap.Free;
+  end;
+end;
+
+{------------------------------------------------------------}
+
+function PSCReplaceBitmapFromResource(ImageList:TPSCImageList;
+  const ResName:String; const Index: Integer): Integer;
+Var
+  H:THandle;
+begin
+  H:=PSCFindResourceInstance(ResName,RT_BITMAP);
+
+  If H=0 then
+    Result:=-1
+  else
+    Result := PSCReplaceBitmapFromResourceEx(ImageList,ResName,H,Index);
+end;
+
+{------------------------------------------------------------------}
+
+function PSCReplaceBitmapFromResourceEx(ImageList: TPSCImageList;
+  const ResName: string;Instance: THandle;Index: Integer) : Integer;
+var
+  Bitmap: TPSCBitmap;
+begin
+  Result := -1;
+  Bitmap := TPSCBitmap.Create;
+  try
+    Bitmap.LoadFromResourceName(Instance, ResName);
+    ImageList.ReplaceMasked(Index, Bitmap, BitMap.TransparentColor);
+    Result := Index;
   finally
     Bitmap.Free;
   end;
@@ -1161,7 +1235,9 @@ end;
 const
   DelphiHelpFiles : array[TPSCDelphiVer] of string =
 //    dv_D2       dv_C1        dv_D3         dv_C3        dv_D4         dv_C4        dv_D5      dv_C5       dv_D6
-  ('delphi.cnt', 'bcb.cnt', 'delphi3.cnt', 'bcb3.cnt', 'delphi4.cnt','bcb4.cnt','delphi5.cnt','bcb5.cnt','delphi6.cnt','bcb6.cnt','d7.cnt');
+  ('delphi.cnt', 'bcb.cnt', 'delphi3.cnt', 'bcb3.cnt', 'delphi4.cnt','bcb4.cnt','delphi5.cnt','bcb5.cnt','delphi6.cnt','bcb6.cnt','d7.cnt',
+//  dv_D8         dv_D2005          dv_D2006          dv_C2006        dv_D2007          dv_C2007      dv_D2009          dv_C2009      dv_D2010         dv_C2010       dv_DXE        dv_CXE);
+  'delphi8.cnt', 'delphi2005.cnt', 'delphi2006.cnt', 'bcb2006.cnt', 'delphi2007.cnt', 'bcb2007.cnt', 'delphi2009.cnt', 'bcb2009.cnt', 'delphi2010.cnt','bcb2010.cnt','delphiXE.cnt','bcbXE.cnt');
 
 function  PSCGetDelphiHelpCntFile(DelphiVer : TPSCDelphiVer) : string;
 begin
@@ -1173,7 +1249,10 @@ end;
 Const
   cDelphiHelpFileNames : Array[ TPSCDelphiVer ] Of String=
 //    dv_D2      dv_C1      dv_D3     dv_C3      dv_D4      dv_C4      dv_D5        dv_C5      dv_D6
-     ( 'vcl',   'bcbvcl',   'vcl3', 'bcbvcl3', 'del4vcl', 'bcb4vcl', 'del5vcl' , 'bcb5vcl', 'del6vcl', 'bcb6vcl', 'd7vcl');
+     ( 'vcl',   'bcbvcl',   'vcl3', 'bcbvcl3', 'del4vcl', 'bcb4vcl', 'del5vcl' , 'bcb5vcl', 'del6vcl', 'bcb6vcl', 'd7vcl',
+//  dv_D8     dv_D2005   dv_D2006    dv_C2006      dv_D2007   dv_C2007      dv_D2009   dv_C2009      dv_D2010  dv_C2010     dv_DXE  dv_CXE);
+      'vcl8', 'vcl2005', 'vcl2006', 'bcb2006vcl', 'vcl2007', 'bcb2007vcl', 'vcl2009', 'bcb2009vcl', 'vcl2010','bcb2010vcl','vclXE','bcbXEvcl');
+
 Function PSCGetDelphiHelpFileName(ADelphiVer:TPSCDelphiVer):String;
 begin
   Result:=cDelphiHelpFileNames[ADelphiVer];
@@ -1237,7 +1316,19 @@ const
     'C++Builder\5.0',
     'Delphi\6.0',
     'C++Builder\6.0',
-    'Delphi\7.0'
+    'Delphi\7.0',
+    'Delphi\8.0',       //D8
+    'Delphi\2005',     //D2005
+    'Delphi\2006',     //D2006
+    'C++Builder\2006',//C2006
+    'Delphi\2007',     //D2007
+    'C++Builder\2007',//C2007
+    'Delphi\2009',     //D2009
+    'C++Builder\2009',//C2009
+    'Delphi\2010',     //D2010
+    'C++Builder\2010',//C2010
+    'Delphi\XE',       //DXE
+    'C++Builder\XE'   //CXE
   );
 //EndSkipConst  
 var
@@ -1490,7 +1581,7 @@ Begin
         SetOrdProp(Dest,destinfo,GetOrdProp(Source,sourceinfo));
       tkFloat:
         SetFloatProp(Dest,destinfo,GetFloatProp(Source,sourceinfo));
-      tkString,tkWChar,tkLString,tkWString:
+      tkUString,tkString,tkWChar,tkLString,tkWString:   // 7 maggio 2011 - Unicode
         SetStrProp(Dest,destinfo,GetStrProp(Source,sourceinfo));
       tkVariant:
         SetVariantProp(Dest,destinfo,GetVariantProp(Source,sourceinfo));
@@ -1805,7 +1896,7 @@ Begin
         result := GetOrdProp(Instance,propinfo);
       tkFloat:
         result := GetFloatProp(Instance,propinfo);
-      tkString,tkWChar,tkLString,tkWString:
+      tkUString,tkString,tkWChar,tkLString,tkWString:
         result := GetStrProp(Instance,propinfo);
       tkVariant:
         result := GetVariantProp(Instance,propinfo);
@@ -1860,7 +1951,7 @@ Begin
       End;
     tkFloat:
       SetFloatProp(Instance,propinfo,Value);
-    tkString,tkWChar,tkLString,tkWString:
+    tkUString,tkString,tkWChar,tkLString,tkWString:
       SetStrProp(Instance,propinfo,String(Value));
     tkVariant:
       SetVariantProp(Instance,propinfo,Value);

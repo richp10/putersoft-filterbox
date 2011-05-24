@@ -1,0 +1,48 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{F90D02E1-3D27-4B70-BB07-013E057D6EB6}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="psc_d2010.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="psc_d2010_runtime.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="psc_d2010">
+			<MSBuild Projects="psc_d2010.dproj"/>
+		</Target>
+		<Target Name="psc_d2010:Clean">
+			<MSBuild Targets="Clean" Projects="psc_d2010.dproj"/>
+		</Target>
+		<Target Name="psc_d2010:Make">
+			<MSBuild Targets="Make" Projects="psc_d2010.dproj"/>
+		</Target>
+		<Target Name="psc_d2010_runtime">
+			<MSBuild Projects="psc_d2010_runtime.dproj"/>
+		</Target>
+		<Target Name="psc_d2010_runtime:Clean">
+			<MSBuild Targets="Clean" Projects="psc_d2010_runtime.dproj"/>
+		</Target>
+		<Target Name="psc_d2010_runtime:Make">
+			<MSBuild Targets="Make" Projects="psc_d2010_runtime.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="psc_d2010;psc_d2010_runtime"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="psc_d2010:Clean;psc_d2010_runtime:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="psc_d2010:Make;psc_d2010_runtime:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>
