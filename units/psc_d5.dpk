@@ -1,0 +1,59 @@
+package psc_d5;
+
+{$R *.RES}
+{$R 'psc_reg.dcr'}
+{$ALIGN ON}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'puterSoft.SDK'}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  vcl50,
+  Vclx50,
+  Vcldb50;
+
+contains
+  psc_reg in 'psc_reg.pas',
+  psc_calendar in 'psc_calendar.pas',
+  psc_const in 'psc_const.pas',
+  psc_fltbox in 'psc_fltbox.pas',
+  psc_procs in 'psc_procs.pas',
+  psc_fontbox in 'psc_fontbox.pas',
+  psc_colorbox in 'psc_colorbox.pas',
+  psc_wrapper in 'psc_wrapper.pas',
+  psc_theme in 'psc_theme.pas',
+  myla_system in 'myla_system.pas',
+  psc_button_color in 'psc_button_color.pas',
+  psc_calculator in 'psc_calculator.pas',
+  psc_edit in 'psc_edit.pas',
+  psc_edit_color in 'psc_edit_color.pas',
+  psc_edit_date in 'psc_edit_date.pas',
+  psc_edit_parts in 'psc_edit_parts.pas',
+  psc_expreval in 'psc_expreval.pas',
+  psc_holidays in 'psc_holidays.pas',
+  myla_interfaces in 'myla_interfaces.pas',
+  psc_parser_date in 'psc_parser_date.pas',
+  psc_listbox in 'psc_listbox.pas',
+  myla_parser in 'myla_parser.pas';
+
+end.

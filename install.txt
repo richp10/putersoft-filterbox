@@ -1,0 +1,131 @@
+============================================================
+--------------
+Index
+--------------
+- How to Install
+  - Installation in Delphi 7
+  - Installation in Delphi 6
+  - Installation in Delphi 5
+  - Installation in C++ Builder 6 
+  - Installation in C++ Builder 5 
+- How to Uninstall
+- Installation Hints
+
+============================================================
+--------------
+How to Install
+--------------
+
+If you have any previous version of this product uninstall 
+it first (please refer to the "How to uninstall" section). 
+
+If you find any problems during installation write us to: 
+support@putersoft.com
+
+WARNING
+-------
+
+* Before installation of our products please download and install 
+  all available patches for Delphi and C++ Builder. In the 
+  "Installation Hints" section we listed patches that need to
+  be installed.
+ 
+
+------------------------
+Installation in Delphi 7
+------------------------ 
+
+1. Run Delphi 7.
+
+2. Select the Delphi 7 File->Open menu option and open the file 
+\UNITS\psc_D7.dpk
+
+3. Click Install.
+
+4. Select Tools|Environment Options menu item. Click on the 'Library'
+page in the appeared dialog. Enter path to the \UNITS folder of the
+installed product in the "Library Path" edit box and press Ok.
+
+
+------------------------
+Installation in Delphi 6
+------------------------ 
+
+1. Run Delphi 6.
+
+2. Select the Delphi 6 File->Open menu option and open the file 
+\UNITS\psc_D6.dpk
+
+3. Click Install.
+
+4. Select Tools|Environment Options menu item. Click on the 'Library'
+page in the appeared dialog. Enter path to the \UNITS folder of the
+installed product in the "Library Path" edit box and press Ok.
+ 
+ 
+------------------------
+Installation in Delphi 5
+------------------------ 
+
+1. Run Delphi 5.
+
+2. Select the Delphi 5 File->Open menu option and open the file 
+\UNITS\psc_D5.dpk
+
+3. Click Install.
+
+4. Select Tools|Environment Options menu item. Click on the 'Library'
+page in the appeared dialog. Enter path to the \UNITS folder of the
+installed product in the "Library Path" edit box and press Ok.
+
+
+-----------------------------
+Installation in C++ Builder 6
+-----------------------------
+
+1. Run C++ Builder 6.
+
+2. Select the C++ Builder 6 File->Open menu option and open the file 
+\UNITS\psc_C6.bpk
+
+3. Click Install.
+
+4. Select Tools|Environment Options menu item. Click on the 'Library'
+page in the appeared dialog. Enter path to the \UNITS folder of the
+installed product in the "Library Path" edit box and press Ok.
+
+
+-----------------------------
+Installation in C++ Builder 5
+-----------------------------
+
+1. Run C++ Builder 5.
+
+2. Select the C++ Builder 5 File->Open menu option and open the file 
+\UNITS\psc_C5.bpk
+
+3. Click Install.
+
+4. Select Tools|Environment Options menu item. Click on the 'Library'
+page in the appeared dialog. Enter path to the \UNITS folder of the
+installed product in the "Library Path" edit box and press Ok.
+
+
+============================================================
+
+----------------
+How to Uninstall
+----------------
+
+Please follow these steps when performing uninstall of our 
+Delphi/C++ Builder components:
+
+1. Call Component|Install Packages dialog of Delphi/C++ Builder. 
+Then select product package and click "Remove" button. 
+After package was removed, click "Ok" button to confirm your changes.
+
+2. Exit Delphi/C++ Builder.
+
+3. Delete folder in which puterSoft.SDK was installed using
+Windows Explorer
+ 
