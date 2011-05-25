@@ -35,7 +35,7 @@ interface
 //{$DEFINE PSC_LANG_czech}
 //{$DEFINE PSC_LANG_spanish}
 //{$DEFINE PSC_LANG_russian}
-{$DEFINE PSC_LANG_italian}
+//{$DEFINE PSC_LANG_italian}
 //{$DEFINE PSC_LANG_french}
 //{$DEFINE PSC_LANG_swedish}
 //{$DEFINE PSC_LANG_danish}
