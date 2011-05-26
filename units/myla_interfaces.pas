@@ -169,8 +169,8 @@ type
   IPSCDataSet = interface(IPSCDataFields)
     ['{E428CE2D-48F5-481D-82C0-15FA297F4A03}']
     function IsEmpty: Boolean;
-    function BOF:Boolean;
-    function EOF:Boolean;
+    function Bof:Boolean;
+    function Eof:Boolean;
 
     procedure BeginUpdate;
     procedure EndUpdate;
@@ -331,7 +331,7 @@ type
     function GetChar:Char;
     procedure Next;
     procedure Prior;
-    function EOF:Boolean;
+    function Eof:Boolean;
   end;
   
   TPSCDateTimeFormatRec = Record
