@@ -3,6 +3,7 @@ Delphi Filterbox
 
 This was originally released by: 
 
+```
 {********************************************************}
 {                                                        }
 {  PSC FilterBox                                         }
@@ -13,6 +14,8 @@ This was originally released by:
 {     WWW: http://www.putersoft.com                      }
 {                                                        }
 {********************************************************}
+```
+
 
 Some additional commits by Enrico Rav from here. 
 
