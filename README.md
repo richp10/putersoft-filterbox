@@ -17,6 +17,6 @@ This was originally released by:
 ```
 
 
-Some additional commits by Enrico Rav from here. 
+Some additional commits by Enrico Rav from here. https://bitbucket.org/EnricoRav/putersoft.sdk-filterbox
 
-https://bitbucket.org/EnricoRav/putersoft.sdk-filterbox
+December 2016 - Updated for XE5 by Igor Kukhtin

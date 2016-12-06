@@ -78,7 +78,7 @@ Type
     Procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
     Procedure KeyDown(Var Key: Word; Shift: TShiftState); override;
     Function CreateObjects: TCollection; virtual; abstract;
-    Procedure InsertItem(Var Index: Integer); virtual;
+    Procedure InsertItem({$IFNDEF XE}Var{$ENDIF} Index: Integer); virtual;
     Procedure DeleteItem(Index: Integer); virtual;
     Procedure ResetItems; virtual;
     Procedure MoveItemIndex(Delta: Integer);
@@ -202,7 +202,7 @@ Type
     Procedure CreateParams(Var Params: TCreateParams); override;
     Procedure CreateWnd; override;
     Function CreateObjects: TCollection; override;
-    Procedure InsertItem(Var Index: Integer); override;
+    Procedure InsertItem({$IFNDEF XE}Var{$ENDIF} Index: Integer); override;
     Function GetImageSize(Var Size: TSize): Boolean; override;
     Procedure DrawImage(Index: Integer; Const Rect: TRect); override;
     Procedure DrawItem(Index: Integer; Rect: TRect;
@@ -625,7 +625,7 @@ Begin
   Inherited;
   With Message Do
     If (Result <> LB_ERR) And (Result <> LB_ERRSPACE) And Not FSaveObjects Then
-      InsertItem(Result)
+      InsertItem({$IFDEF XE2}Integer(Result){$ELSE}Result{$ENDIF})
 End;
 
 {-------------------------------------}
@@ -635,7 +635,7 @@ Begin
   Inherited;
   With Message Do
     If (Result <> LB_ERR) And (Result <> LB_ERRSPACE) And Not FSaveObjects Then
-      InsertItem(Result)
+      InsertItem({$IFDEF XE2}Integer(Result){$ELSE}Result{$ENDIF})
 End;
 
 {-------------------------------------}
@@ -668,7 +668,7 @@ End;
 
 {-------------------------------------}
 
-Procedure TPSCCustomObjListBox.InsertItem(Var Index: Integer);
+Procedure TPSCCustomObjListBox.InsertItem({$IFNDEF XE}Var{$ENDIF} Index: Integer);
 Begin
   FObjects.Add.Index := Index
 End;
@@ -1097,9 +1097,9 @@ Var
         Result := I <> -1;
         If Result Then
           Begin
-            FontParams := TFontParams(Items.Objects[I]);
+            FontParams := TFontParams({$IFDEF XE2}integer(Items.Objects[I]){$ELSE}Items.Objects[I]{$ENDIF});
             FontParams.FontType := FontParams.FontType Or FontType;
-            Items.Objects[I] := TObject(FontParams)
+            Items.Objects[I] := TObject({$IFDEF XE2}longint(FontParams){$ELSE}Items.Objects[I]{$ENDIF})
           End
       End
   End;
@@ -1247,7 +1247,7 @@ End;
 
 {-------------------------------------}
 
-Procedure TPSCCustomFontBox.InsertItem(Var Index: Integer);
+Procedure TPSCCustomFontBox.InsertItem({$IFNDEF XE}Var{$ENDIF} Index: Integer);
 Var
   SysIndex: Integer;
   FontParams: TFontParams;

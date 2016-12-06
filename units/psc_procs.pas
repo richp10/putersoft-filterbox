@@ -2142,7 +2142,7 @@ var
 begin
   Month:=PSCGetDateElement(Date,2);
   Day:=PSCGetDateElement(Date,3);
-  Result:=ShortMonthNames[Month]+IntToStr(Day);
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}ShortMonthNames[Month]+IntToStr(Day);
 end;
 
 {-------------------------------------------------------------------------}
@@ -2475,9 +2475,9 @@ begin
   YearLen:=Length(PSCIntToStr(AYear));
   if (YearLen <= 2) then
   begin
-    CenturyBase := PSCGetYear - TwoDigitYearCenturyWindow;
+    CenturyBase := PSCGetYear - {$IFDEF XE2}FormatSettings.{$ENDIF}TwoDigitYearCenturyWindow;
     Inc(Result, CenturyBase div 100 * 100);
-    if (TwoDigitYearCenturyWindow > 0) and (Result < CenturyBase) then
+    if ({$IFDEF XE2}FormatSettings.{$ENDIF}TwoDigitYearCenturyWindow > 0) and (Result < CenturyBase) then
       Inc(Result, 100);
   end;
 end;
@@ -2968,10 +2968,10 @@ Var
 Begin
   Result := S;
   For i := 1 To 12 Do
-    If DoReplace(Result,LongMonthNames[i],i) Then
+    If DoReplace(Result,{$IFDEF XE2}FormatSettings.{$ENDIF}LongMonthNames[i],i) Then
       exit;
   For i := 1 To 12 Do
-    If DoReplace(Result,ShortMonthNames[i],i) Then
+    If DoReplace(Result,{$IFDEF XE2}FormatSettings.{$ENDIF}ShortMonthNames[i],i) Then
       exit;
 End;
 
@@ -3147,8 +3147,8 @@ end;
 
 procedure PSCRemoveSysExtraMonthFormat;
 begin
-  SysUtils.ShortDateFormat:=PSCRemoveExtraMonthFormat(
-    ShortDateFormat,True);
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortDateFormat:=PSCRemoveExtraMonthFormat(
+    {$IFDEF XE2}FormatSettings.{$ENDIF}ShortDateFormat,True);
 end;
 
 {-------------------------------------------------------------------------}
@@ -3640,28 +3640,28 @@ End;
 
 Function PSCSysDTFormatToRec: TPSCDateTimeFormatRec;
 Begin
-  Result.ShortTimeFormat := SysUtils.ShortTimeFormat;
-  Result.ShortDateFormat := SysUtils.ShortDateFormat;
-  Result.LongDateFormat := SysUtils.LongDateFormat;
-  Result.LongTimeFormat := SysUtils.LongTimeFormat;
-  Result.DateSeparator := SysUtils.DateSeparator;
-  Result.TimeSeparator := SysUtils.TimeSeparator;
-  Result.TimeAMString := SysUtils.TimeAMString;
-  Result.TimePMString := SysUtils.TimePMString;
+  Result.ShortTimeFormat := SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortTimeFormat;
+  Result.ShortDateFormat := SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortDateFormat;
+  Result.LongDateFormat := SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}LongDateFormat;
+  Result.LongTimeFormat := SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}LongTimeFormat;
+  Result.DateSeparator := SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}DateSeparator;
+  Result.TimeSeparator := SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimeSeparator;
+  Result.TimeAMString := SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimeAMString;
+  Result.TimePMString := SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimePMString;
 End;
 
 {------------------------------}
 
 Procedure PSCRecToSysDTFormat(Const Rec: TPSCDateTimeFormatRec);
 Begin
-  SysUtils.ShortTimeFormat := Rec.ShortTimeFormat;
-  SysUtils.ShortDateFormat := Rec.ShortDateFormat;
-  SysUtils.LongDateFormat := Rec.LongDateFormat;
-  SysUtils.LongTimeFormat := Rec.LongTimeFormat;
-  SysUtils.DateSeparator := Rec.DateSeparator[1];
-  SysUtils.TimeSeparator := Rec.TimeSeparator[1];
-  SysUtils.TimeAMString := Rec.TimeAMString;
-  SysUtils.TimePMString := Rec.TimePMString;
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortTimeFormat := Rec.ShortTimeFormat;
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortDateFormat := Rec.ShortDateFormat;
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}LongDateFormat := Rec.LongDateFormat;
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}LongTimeFormat := Rec.LongTimeFormat;
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}DateSeparator := Rec.DateSeparator[1];
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimeSeparator := Rec.TimeSeparator[1];
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimeAMString := Rec.TimeAMString;
+  SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimePMString := Rec.TimePMString;
 End;
 
 {------------------------------------------------------------------}

@@ -161,7 +161,7 @@ type
 
   TPSCImage=TImage;
 
-  THandle=LongWord;
+  {$IFNDEF XE2}THandle=LongWord; {$ENDIF}
 
   TPSCMethod=TMethod;
 
@@ -678,7 +678,6 @@ function PSCInsertBitmapFromResourceEx(ImageList: TPSCImageList;
 var
   Bitmap: TPSCBitmap;
 begin
-  Result := -1;  
   Bitmap := TPSCBitmap.Create;
   try
     Bitmap.LoadFromResourceName(Instance, ResName);
@@ -711,7 +710,6 @@ function PSCReplaceBitmapFromResourceEx(ImageList: TPSCImageList;
 var
   Bitmap: TPSCBitmap;
 begin
-  Result := -1;
   Bitmap := TPSCBitmap.Create;
   try
     Bitmap.LoadFromResourceName(Instance, ResName);
@@ -1655,7 +1653,7 @@ end;
 
 {------------------------------------------------------------------}
 
-function PSCModulesToListFunc(HInstance: Longint; Data: Pointer): Boolean;
+function PSCModulesToListFunc(HInstance: {$IFDEF XE5}NativeInt{$ELSE}Longint{$ENDIF}; Data: Pointer): Boolean;
 begin
   Result:=True;
   TList(Data).Add(TObject(HInstance));
@@ -1729,14 +1727,14 @@ End;
 
 function PSCTimeSeparator:Char;
 begin
-  Result:=TimeSeparator;
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}TimeSeparator;
 end;
 
 {--------------------------------}
 
 function PSCDateSeparator:Char;
 begin
-  Result:=DateSeparator;
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}DateSeparator;
 end;
 
 {--------------------------------}
@@ -1765,56 +1763,56 @@ end;
 
 function PSCShortTimeFormat:String;
 begin
-  Result:=ShortTimeFormat;
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}ShortTimeFormat;
 end;
 
 {-------------------------------------------------------------}
 
 function PSCLongTimeFormat:String;
 begin
-  Result:=LongTimeFormat;
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}LongTimeFormat;
 end;
 
 {-------------------------------------------------------------}
 
 function PSCShortDateFormat:String;
 begin
-  Result:=ShortDateFormat;
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}ShortDateFormat;
 end;
 
 {-------------------------------------------------------------}
 
 function PSCLongDateFormat:String;
 begin
-  Result:=LongDateFormat;
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}LongDateFormat;
 end;
 
 {-------------------------------------------------------------}
 
 function PSCLongMonthNames(AIndex:Integer):string;
 begin
-  Result:=LongMonthNames[AIndex];
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}LongMonthNames[AIndex];
 end;
 
 {-------------------------------------------------------------}
 
 function PSCShortMonthNames(AIndex:Integer):string;
 begin
-  Result:=ShortMonthNames[AIndex];
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}ShortMonthNames[AIndex];
 end;
 
 {-------------------------------------------------------------}
 
 procedure PSCSetDecimalSeparator(AValue:Char);
 begin
-  DecimalSeparator:=AValue;
+  {$IFDEF XE2}FormatSettings.{$ENDIF}DecimalSeparator:=AValue;
 end;
 
 {-------------------------------------------------------------}
 
 function PSCGetDecimalSeparator:Char;
 begin
-  Result:=DecimalSeparator;
+  Result:={$IFDEF XE2}FormatSettings.{$ENDIF}DecimalSeparator;
 end;
 
 {---------------------------------------------------------}

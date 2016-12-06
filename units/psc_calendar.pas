@@ -1845,7 +1845,7 @@ procedure PSCDrawBlackOnWhiteArrow(Canvas: TPSCCanvas; LeftArrow: Boolean;
 const
   CPSCDefaultCalendarClass:TPSCCalendarClass=TPSCCalendar;
 
-  CPSCDayNumbers : array[1..31] of string[2] =
+  CPSCDayNumbers : array[1..31] of string{$IFNDEF XE}[2]{$ENDIF} =
    ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
     '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
     '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31');
@@ -8289,9 +8289,9 @@ var
   L: Integer;
 begin
   If ALength In [wdlOne,wdlTwo,wdlShort] Then
-    Result := ShortDayNames[ADayIndex]
+    Result := {$IFDEF XE2}FormatSettings.{$ENDIF}ShortDayNames[ADayIndex]
   Else
-    Result := LongDayNames[ADayIndex];
+    Result := {$IFDEF XE2}FormatSettings.{$ENDIF}LongDayNames[ADayIndex];
   L := Length(Result);
   Case ALength Of
     wdlOne: L := 1;
@@ -8321,7 +8321,6 @@ Var
   I,J,H: Integer;
   R: TRect;
   S: String;
-  Size: TSize;
   MyPoint:TPoint;
 Begin
   With Canvas Do
@@ -11564,8 +11563,9 @@ Begin
             Result := mhtMonths;
             With CLientRect Do
               Begin
-                Size.cx := P.x Div (Right Div 3);
-                Size.cy := (P.y - (Delta + Size.cy + 4)) Div ((Bottom - (Delta +
+
+                {$IFDEF XE5}Width{$ELSE}Size.cx{$ENDIF} := P.x Div (Right Div 3);
+                {$IFDEF XE5}Height{$ELSE}Size.cy{$ENDIF} := (P.y - (Delta + Size.cy + 4)) Div ((Bottom - (Delta +
                   Size.cy + 4)) Div 4)
               End;
             If (Size.cx In [0..2]) And (Size.cy In [0..3]) Then

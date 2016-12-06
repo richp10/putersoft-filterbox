@@ -167,8 +167,8 @@ type
     Procedure RestoreSystemFormat;
 
     Function GetFormat(AKind:TPSCDateTimeKind):String;
-    Function ToString(Const V: TDateTime;AKind:TPSCDateTimeKind): String; overload;
-    Function ToString(Const V: TDateTime;const AFormat:String): String; overload;
+    Function ToString(Const V: TDateTime;AKind:TPSCDateTimeKind): String; {$IFDEF XE2} reintroduce; {$ENDIF} overload;
+    Function ToString(Const V: TDateTime;const AFormat:String): String; {$IFDEF XE2} reintroduce; {$ENDIF}overload;
     Function FromString(Const S: String;AKind:TPSCDateTimeKind;
       const ADefault:TDateTime): TDateTime;
 
@@ -1964,84 +1964,84 @@ end;
 
 function TPSCSysUtilsDateTimeFormat.GetTimeAMString:String;
 begin
-  Result:=SysUtils.TimeAMString;
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimeAMString;
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetTimePMString:String;
 begin
-  Result:=SysUtils.TimePMString;
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimePMString;
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetDateSeparator:String;
 begin
-  Result:=SysUtils.DateSeparator;
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}DateSeparator;
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetTimeSeparator:String;
 begin
-  Result:=SysUtils.TimeSeparator;
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}TimeSeparator;
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetLongDateFormat:String;
 begin
-  Result:=SysUtils.LongDateFormat;
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}LongDateFormat;
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetShortDateFormat:String;
 begin
-  Result:=SysUtils.ShortDateFormat;
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortDateFormat;
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetLongTimeFormat:String;
 begin
-  Result:=SysUtils.LongTimeFormat;
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}LongTimeFormat;
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetShortTimeFormat:String;
 begin
-  Result:=SysUtils.ShortTimeFormat;
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortTimeFormat;
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetShortDayName(const AIndex:Integer):String;
 begin
-  Result:=SysUtils.ShortDayNames[AIndex];
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortDayNames[AIndex];
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetLongDayName(const AIndex:Integer):String;
 begin
-  Result:=SysUtils.LongDayNames[AIndex];
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}LongDayNames[AIndex];
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetLongMonthName(const AIndex:Integer):String;
 begin
-  Result:=SysUtils.ShortMonthNames[AIndex];
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortMonthNames[AIndex];
 end;
 
 {------------------------------------------------------------------------------}
 
 function TPSCSysUtilsDateTimeFormat.GetShortMonthName(const AIndex:Integer):String;
 begin
-  Result:=SysUtils.ShortMonthNames[AIndex];
+  Result:=SysUtils.{$IFDEF XE2}FormatSettings.{$ENDIF}ShortMonthNames[AIndex];
 end;
 
 {------------------------------------------------------------------------------}

@@ -467,7 +467,7 @@ End;
 {-------------------------------------------------------------------------}
 
 Const
-  sFunctionName: Array[TPSCFilterFunc] Of String[9] = ('', 'upper', 'lower', //don't resource
+  sFunctionName: Array[TPSCFilterFunc] Of String {$IFNDEF XE}[9]{$ENDIF} = ('', 'upper', 'lower', //don't resource
     'substring', 'trim', 'trimleft', 'trimright', 'year', 'month',//don't resource
     'day', 'hour', 'minute', 'second', 'getdate', 'date', 'time');//don't resource
 
